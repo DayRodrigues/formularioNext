@@ -12,24 +12,44 @@ import {
 import Head from "next/head";
 import { FormEvent, FunctionComponent, useState } from "react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from 'yup';
 
-interface IHomeProps{
-  fistName: string;
-  lastName: string;
-  email: string;
-  address: string;
-  phone: number | null;
-  description: string;
-  onSubmit: () => void;
-  handleSubmit: () => void;
+interface IUserFormData{
+    firstName:string,
+    lastName:string,
+    email:string,
+    address:string,
+    phone:string,
+    description:string,
 }
 
-const Cadastro: FunctionComponent <IHomeProps> = () => {
-    const {register,handleSubmit} = useForm ()
-    const onSubmit = (data: Object) => {
+const schema = yup.object({
+   firstName: yup.string().required(),
+   lastName: yup.string().required(),
+   email: yup.string(). required(),
+   address: yup.string().required(),
+   phone: yup.string().required(),
+   description: yup.string().required(),
+});
+
+const Cadastro: FunctionComponent = () => {
+    const {
+        register,
+        handleSubmit,
+         formState: {errors}
+        } = useForm <IUserFormData> ({
+        resolver: yupResolver(schema)
+    });
+
+    function onSubmit (data: any){
         console.log(data)
     }
 
+    //function setErros(error: any){
+    //    console.log('Errors', error)
+    //}
+ 
   return (
     <>
       <Head>
@@ -57,8 +77,9 @@ const Cadastro: FunctionComponent <IHomeProps> = () => {
             boxShadow='lg'
             background='gray.700'
             borderRadius='6px'>
-            <Heading color='gray.200' fontSize='2xl'>
-              <text>
+
+            <Heading>
+              <text color='gray.200' fontSize='2xl'>
                 Registro de formulário
               </text>
             </Heading>
@@ -67,7 +88,7 @@ const Cadastro: FunctionComponent <IHomeProps> = () => {
               <form action="" autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
                 <Flex justify='space-between'>
 
-                  <FormControl isRequired marginTop='15px' width='49%'>
+                  <FormControl marginTop='15px' width='49%'>
                     <FormLabel color='gray.200'>Nome</FormLabel>
                     <Input
                       type='text'
@@ -77,12 +98,12 @@ const Cadastro: FunctionComponent <IHomeProps> = () => {
                       focusBorderColor='gray.600'
                       color='gray.200'
                       placeholder='Nome'
-                      {...register('fistName')}
+                      {...register('firstName')}
                     />
-
+                    <p style= {{color: 'red'}}>{errors?.firstName?.message}</p>
                   </FormControl>
 
-                  <FormControl isRequired marginTop='15px' width='49%'>
+                  <FormControl marginTop='15px' width='49%'>
                     <FormLabel color='gray.200'>Sobrenome</FormLabel>
                     <Input
                       type='text'
@@ -94,10 +115,11 @@ const Cadastro: FunctionComponent <IHomeProps> = () => {
                       placeholder='Sobrenome'
                       {...register('lastName')}
                     />
+                    <p style= {{color: 'red'}}>{errors?.lastName?.message}</p>
                   </FormControl>
                 </Flex>
 
-                <FormControl isRequired marginTop='15px'>
+                <FormControl marginTop='15px'>
                   <FormLabel color='gray.200'>E-mail</FormLabel>
                   <Input
                     border='none'
@@ -108,10 +130,11 @@ const Cadastro: FunctionComponent <IHomeProps> = () => {
                     placeholder='E-mail'
                     {...register('email')}
                   />
+                  <p style= {{color: 'red'}}>{errors?.email?.message}</p>
                 </FormControl>
 
                 <Flex justify='space-between' >
-                  <FormControl isRequired marginTop='15px' width='49%' >
+                  <FormControl marginTop='15px' width='49%' >
                     <FormLabel color='gray.200'>Endereço</FormLabel>
                     <Input
                       type='address'
@@ -123,9 +146,10 @@ const Cadastro: FunctionComponent <IHomeProps> = () => {
                       placeholder='Endereço'
                       {...register('address')}
                     />
+                    <p style= {{color: 'red'}}>{errors?.address?.message}</p>
                   </FormControl>
 
-                  <FormControl isRequired marginTop='15px' width='49%'>
+                  <FormControl marginTop='15px' width='49%'>
                     <FormLabel color='gray.200'>Telefone</FormLabel>
                     <Input
                       type='phone'
@@ -137,10 +161,11 @@ const Cadastro: FunctionComponent <IHomeProps> = () => {
                       placeholder='Telefone' 
                       {...register('phone')}
                       />
+                      <p style= {{color: 'red'}}>{errors?.phone?.message}</p>
                   </FormControl>
                 </Flex>
 
-                <FormControl isRequired marginTop='15px'>
+                <FormControl marginTop='15px'>
                   <FormLabel color='gray.200'>Descreva sua mensagem</FormLabel>
                   <Textarea
                     border='none'
@@ -151,6 +176,7 @@ const Cadastro: FunctionComponent <IHomeProps> = () => {
                     placeholder='Descreva sua mensagem' 
                     {...register('description')}
                     />
+                    <p style= {{color: 'red'}}>{errors?.description?.message}</p>
                 </FormControl>
 
                 <Button
