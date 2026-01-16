@@ -10,7 +10,7 @@ import {
   Textarea
  } from "@chakra-ui/react";
 import Head from "next/head";
-import { FormEvent, FunctionComponent, useState } from "react";
+import { FunctionComponent} from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup';
@@ -25,12 +25,12 @@ interface IUserFormData{
 }
 
 const schema = yup.object({
-   firstName: yup.string().required(),
-   lastName: yup.string().required(),
-   email: yup.string(). required(),
-   address: yup.string().required(),
-   phone: yup.string().required(),
-   description: yup.string().required(),
+   firstName: yup.string().required('Nome é Obrigadatório'),
+   lastName: yup.string().required('Sobrenome é Obrigadatório'),
+   email: yup.string(). required('Email é Obrigadatório'),
+   address: yup.string().required('Endereço é Obrigadatório'),
+   phone: yup.string().required('Telefone é Obrigadatório'),
+   description: yup.string().required('Descrição é Obrigadatório'),
 });
 
 const Cadastro: FunctionComponent = () => {
